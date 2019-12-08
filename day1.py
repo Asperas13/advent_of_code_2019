@@ -103,7 +103,14 @@ _inp = """
 
 
 def calculate_fuel(module):
-    return (module // 3) - 2
+    fuel = 0
+    while True:
+        module = (module // 3) - 2
+        if module > 0:
+            fuel += module
+        else:
+            break
+    return fuel
 
 
 def calculate_total_fuel_required(data):

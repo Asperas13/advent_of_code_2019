@@ -70,6 +70,42 @@ def exec_read_op(opcodes, offset, params):
     return offset + 2
 
 
+def exec_jump_iftrue_op(opcodes, offset, params):
+    first_arg = opcodes[offset + 1] if params.m1 == '1' else opcodes[opcodes[offset + 1]]
+    second_arg = opcodes[offset + 2] if params.m2 == '1' else opcodes[opcodes[offset + 2]]
+    if first_arg != 0:
+        return second_arg
+    return offset + 3
+
+
+def exec_jump_iffalse_op(opcodes, offset, params):
+    first_arg = opcodes[offset + 1] if params.m1 == '1' else opcodes[opcodes[offset + 1]]
+    second_arg = opcodes[offset + 2] if params.m2 == '1' else opcodes[opcodes[offset + 2]]
+    if first_arg == 0:
+        return second_arg
+    return offset + 3
+
+
+def exec_lt_op(opcodes, offset, params):
+    first_arg = opcodes[offset + 1] if params.m1 == '1' else opcodes[opcodes[offset + 1]]
+    second_arg = opcodes[offset + 2] if params.m2 == '1' else opcodes[opcodes[offset + 2]]
+    if first_arg < second_arg:
+        opcodes[opcodes[offset + 3]] = 1
+    else:
+        opcodes[opcodes[offset + 3]] = 0
+    return offset + 4
+
+
+def exec_eq_op(opcodes, offset, params):
+    first_arg = opcodes[offset + 1] if params.m1 == '1' else opcodes[opcodes[offset + 1]]
+    second_arg = opcodes[offset + 2] if params.m2 == '1' else opcodes[opcodes[offset + 2]]
+    if first_arg == second_arg:
+        opcodes[opcodes[offset + 3]] = 1
+    else:
+        opcodes[opcodes[offset + 3]] = 0
+    return offset + 4
+
+
 def exec_exit_op():
     return EXIT_CODE
 
@@ -84,6 +120,14 @@ def execute_opcode(opcodes, offset, input_value):
         return exec_write_op(opcodes, offset, params, input_value)
     elif params.op == '04':
         return exec_read_op(opcodes, offset, params)
+    elif params.op == '05':
+        return exec_jump_iftrue_op(opcodes, offset, params)
+    elif params.op == '06':
+        return exec_jump_iffalse_op(opcodes, offset, params)
+    elif params.op == '07':
+        return exec_lt_op(opcodes, offset, params)
+    elif params.op == '08':
+        return exec_eq_op(opcodes, offset, params)
     elif params.op == '99':
         return exec_exit_op()
     else:
@@ -105,4 +149,4 @@ def run_program(opcodes, input_value):
 
 
 if __name__ == "__main__":
-    run_program(_inp, input_value=1)
+    run_program(_inp, input_value=5)

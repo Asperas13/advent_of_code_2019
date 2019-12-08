@@ -22,10 +22,10 @@ def execute_opcode(opcodes, offset):
     return True
 
 
-def run_program(opcodes, opcode_size=4):
+def run_program(opcodes, noun, verb, opcode_size=4):
     opcodes = [int(instruction) for instruction in opcodes.strip().split(',')]
-    opcodes[1] = 12
-    opcodes[2] = 2
+    opcodes[1] = noun
+    opcodes[2] = verb
     for i in range(0, len(opcodes), opcode_size):
         try:
             result = execute_opcode(opcodes, i)
@@ -33,8 +33,15 @@ def run_program(opcodes, opcode_size=4):
                 break
         except InvalidOpcodeError:
             print("Something wen't wrong")
-    return opcodes[0]
+
+    if opcodes[0] == 19690720:
+        return True
+    return False
 
 
 if __name__ == "__main__":
-    print(run_program(_inp))
+    for i in range(101):
+        for j in range(101):
+            result = run_program(_inp, i, j)
+            if result:
+                print(100 * i + j)

@@ -4,6 +4,7 @@ MAX_NUMBER = 820401
 
 def is_potential_password(number):
     has_same_adjacent_digit = False
+    adjacent_same_digit_count = 1
     prev_digit = number % 10
     number = number // 10
 
@@ -13,8 +14,20 @@ def is_potential_password(number):
         if rest > prev_digit:
             return False
 
-        if rest == prev_digit:
-            has_same_adjacent_digit = True
+        if not has_same_adjacent_digit:
+            if rest == prev_digit:
+                if adjacent_same_digit_count == 1:
+                    adjacent_same_digit_count += 1
+                    has_same_adjacent_digit = True
+            else:
+                adjacent_same_digit_count = 1
+        else:
+            if rest == prev_digit:
+                if adjacent_same_digit_count == 2:
+                    has_same_adjacent_digit = False
+                    adjacent_same_digit_count += 1
+            else:
+                adjacent_same_digit_count = 1
 
         prev_digit = rest
 

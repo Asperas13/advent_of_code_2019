@@ -49,29 +49,38 @@ def parse_move(move):
 
 
 def collect_moves(path):
-    moves = set()
+    moves = {}
+    steps_count = 0
     y, x = 0, 0
     for move in path:
         direction, steps = parse_move(move)
         for _ in range(steps):
             y += direction[0]
             x += direction[1]
-            moves.add((y, x))
+            steps_count += 1
+            moves[(y, x)] = steps_count
     return moves
 
 
+def find_first_intersection(path, moves):
+    steps_count = 0
+    min_intersection = float('+inf')
+    y, x = 0, 0
+    for move in path:
+        direction, steps = parse_move(move)
+        for _ in range(steps):
+            y += direction[0]
+            x += direction[1]
+            steps_count += 1
+            if (y, x) in moves:
+                min_intersection = min(min_intersection, steps_count + moves[y, x])
+    return min_intersection
+
+
 def run_program(paths):
-    min_distance = float('+inf')
     path1_moves = collect_moves(paths[0])
-    path2_moves = collect_moves(paths[1])
-    intersection_moves = path1_moves.intersection(path2_moves)
-    if not intersection_moves:
-        return 0
-
-    for move in intersection_moves:
-        min_distance = min(min_distance, calculate_md(move, (0, 0)))
-
-    return min_distance
+    first_intersection = find_first_intersection(paths[1], path1_moves)
+    return first_intersection
 
 
 if __name__ == "__main__":
